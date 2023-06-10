@@ -69,6 +69,25 @@ const getAircrafts = async () => {
     return response.data;
 };
 
+const getSubfleets = async () => {
+    const entry = getCache("subfleets", "data");
+
+    if (!!entry) {
+        return entry;
+    }
+
+    const response = await axios({
+        url: `${scIdentity.airline.settings.scriptURL}data/subfleets`,
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${scIdentity.va_user.session}`,
+        },
+    });
+
+    storeCache("subfleets", "data", response.data);
+    return response.data;
+};
+
 module.exports = {
     onStart: (identity) => {
         scIdentity = identity;
@@ -205,6 +224,23 @@ module.exports = {
                     }
                 },
             },
+            subfleets: {
+                description: "Endpoint to list subfleets",
+                handler: async (req, res) => {
+                    try {
+                        const aircraft = await getSubfleets();
+
+                        return res.json(aircraft);
+                    } catch (error) {
+                        log(
+                            "Error while getting aircraft list",
+                            "error",
+                            error
+                        );
+                        return res.status(500).json({});
+                    }
+                },
+            },
         },
         post: {
             "create-flight": {
@@ -274,6 +310,31 @@ module.exports = {
                         return res.json(response.data);
                     } catch (error) {
                         log("Error while booking flight", "error", error);
+                        return res.status(500).json({});
+                    }
+                },
+            },
+            "prefile-flight": {
+                description: "Endpoint to prefile a flight just before it's sent to flight tracking",
+                handler: async (req, res) => {
+                    const { bidID, aircraftID } = req.body;
+
+                    try {
+                        const response = await axios({
+                            url: `${scIdentity.airline.settings.scriptURL}flights/prefile`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${scIdentity.va_user.session}`,
+                            },
+                            data: {
+                                bidID: bidID,
+                                aircraftID: aircraftID
+                            },
+                        });
+
+                        return res.json(response.data);
+                    } catch (error) {
+                        log("Error while prefiling flight", "error", error);
                         return res.status(500).json({});
                     }
                 },

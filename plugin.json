@@ -1,9 +1,9 @@
 {
-    "id": "com.tfdidesign.flight-center",
+    "id": "com.cardinalhorizon.smartcars-native-flight-center",
     "name": "Flight Center",
     "version": "0.10.0",
     "type": "airline",
-    "description": "The flight booking system for smartCARS",
+    "description": "Flight Booking System for use with smartCARS Native for phpVMS 7",
     "availableSettings": {
         "charter_flights": {
             "name": "Allow Flight Chartering",

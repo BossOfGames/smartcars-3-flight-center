@@ -58,18 +58,19 @@ const BidRow = (props) => {
 
         let foundBid = false;
         try {
-            const bids = await request({
-                url: baseUrl + "bookings",
-                method: "GET",
+            const pirep = await request({
+                url: baseUrl + "prefile-flight",
+                method: "POST",
                 params: {
-                    nocache: true,
+                    bidID: props.flight.bidID,
+                    aircraftID: flight.aircraft
                 },
             });
 
-            foundBid = !!bids.find((bid) => bid.bidID === props.flight.bidID);
+            //foundBid = !! pirep;
         } catch (error) {
             notify("com.tfdidesign.flight-center", null, null, {
-                message: "Failed to get bid flights",
+                message: "Failed to prefile and start the flight",
                 type: "danger",
             });
 
@@ -78,6 +79,7 @@ const BidRow = (props) => {
 
         try {
             if (foundBid) {
+
                 await localApi(
                     "api/com.tfdidesign.flight-tracking/startflight",
                     "POST",
