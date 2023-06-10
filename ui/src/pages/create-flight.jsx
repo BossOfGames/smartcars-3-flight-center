@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeft } from "@fortawesome/pro-solid-svg-icons";
 
 //import { GetAirport, GetAircraft, DecDurToStr } from "../helper.js";
-const baseUrl = "http://localhost:7172/api/com.tfdidesign.flight-center/";
+const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.phpvms7-native-flight-center/";
 
 const CreateFlightContents = ({ airportsList, aircrafts }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -60,14 +60,14 @@ const CreateFlightContents = ({ airportsList, aircrafts }) => {
                 },
             });
 
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Flight created",
                 type: "success",
             });
 
             navigate("/");
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to create flight",
                 type: "danger",
             });
@@ -287,7 +287,7 @@ const CreateFlight = () => {
             });
             setAirports(response);
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to fetch airports",
                 type: "danger",
             });
@@ -305,7 +305,7 @@ const CreateFlight = () => {
 
             setAircraft(response);
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to fetch aircraft",
                 type: "danger",
             });

@@ -8,7 +8,7 @@ import { GetAirport, GetAircraft, DecDurToStr } from "../helper.js";
 import Autocomplete from "../components/autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeft } from "@fortawesome/pro-solid-svg-icons";
-const baseUrl = "http://localhost:7172/api/com.tfdidesign.flight-center/";
+const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.phpvms7-native-flight-center/";
 
 const FlightRow = (props) => {
     const [aircraft, setAircraft] = useState(null);
@@ -258,13 +258,13 @@ const SearchFlightsContent = (props) => {
                 setFlights(response);
             } else {
                 setFlights([]);
-                notify("com.tfdidesign.flight-center", null, null, {
+                notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                     message: "Error parsing flights",
                     type: "danger",
                 });
             }
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to fetch flights",
                 type: "danger",
             });
@@ -281,13 +281,13 @@ const SearchFlightsContent = (props) => {
                 },
             });
 
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Flight booked successfully",
                 type: "success",
             });
             navigate("/");
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to book flight",
                 type: "danger",
             });
@@ -672,7 +672,7 @@ const SearchFlights = () => {
             });
             setAirports(response);
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to fetch airports",
                 type: "danger",
             });
@@ -690,7 +690,7 @@ const SearchFlights = () => {
 
             setAircraft(response);
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to fetch aircraft",
                 type: "danger",
             });

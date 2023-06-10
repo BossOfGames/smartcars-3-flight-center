@@ -8,7 +8,7 @@ import { GetAirport, GetAircraft, DecDurToStr } from "../helper.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh, faTrash, faPlane } from "@fortawesome/pro-solid-svg-icons";
 
-const baseUrl = "http://localhost:7172/api/com.tfdidesign.flight-center/";
+const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.phpvms7-native-flight-center/";
 
 const BidRow = (props) => {
     const [aircraft, setAircraft] = useState(null);
@@ -32,7 +32,7 @@ const BidRow = (props) => {
 
     const flyFlight = async () => {
         if (!aircraft) {
-            return notify("com.tfdidesign.flight-center", null, null, {
+            return notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "No suitable aircraft for this flight",
                 type: "danger",
             });
@@ -69,7 +69,7 @@ const BidRow = (props) => {
 
             //foundBid = !! pirep;
         } catch (error) {
-            notify("com.tfdidesign.flight-center", null, null, {
+            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "Failed to prefile and start the flight",
                 type: "danger",
             });
@@ -89,7 +89,7 @@ const BidRow = (props) => {
                     pluginID: "com.tfdidesign.flight-tracking",
                 });
             } else {
-                notify("com.tfdidesign.flight-center", null, null, {
+                notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                     message: "Failed to start flight - bid not found",
                     type: "danger",
                 });
@@ -103,7 +103,7 @@ const BidRow = (props) => {
 
     const planWithSimBrief = async () => {
         if (!aircraft) {
-            return notify("com.tfdidesign.flight-center", null, null, {
+            return notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
                 message: "No suitable aircraft for this flight",
                 type: "danger",
             });
@@ -617,7 +617,7 @@ const FlightCenter = ({ identity }) => {
     const [simBriefInstalled, setSimBriefInstalled] = useState(false);
 
     const pluginData = identity?.airline?.plugins?.find(
-        (p) => p.id === "com.tfdidesign.flight-center"
+        (p) => p.id === "com.cardinalhorizon.phpvms7-native-flight-center"
     );
 
     useEffect(() => {
