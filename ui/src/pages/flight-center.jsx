@@ -8,7 +8,7 @@ import { GetAirport, GetAircraft, DecDurToStr } from "../helper.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh, faTrash, faPlane } from "@fortawesome/pro-solid-svg-icons";
 
-const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.phpvms7-native-flight-center/";
+const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.vms7-nfc/";
 
 const BidRow = (props) => {
     const [aircraft, setAircraft] = useState(null);
@@ -32,7 +32,7 @@ const BidRow = (props) => {
 
     const flyFlight = async () => {
         if (!aircraft) {
-            return notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            return notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "No suitable aircraft for this flight",
                 type: "danger",
             });
@@ -61,16 +61,17 @@ const BidRow = (props) => {
             const pirep = await request({
                 url: baseUrl + "prefile-flight",
                 method: "POST",
-                params: {
+                data: {
                     bidID: props.flight.bidID,
-                    aircraftID: flight.aircraft
+                    aircraftID: flight.aircraft.id
                 },
             });
 
-            //foundBid = !! pirep;
+            foundBid = props.flight.flightID === pirep.flight_id;
+            console.log([props.flight, pirep.flight_id]);
         } catch (error) {
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
-                message: "Failed to prefile and start the flight",
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
+                message: error.data.message,
                 type: "danger",
             });
 
@@ -89,7 +90,7 @@ const BidRow = (props) => {
                     pluginID: "com.tfdidesign.flight-tracking",
                 });
             } else {
-                notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+                notify("com.cardinalhorizon.vms7-nfc", null, null, {
                     message: "Failed to start flight - bid not found",
                     type: "danger",
                 });
@@ -100,10 +101,29 @@ const BidRow = (props) => {
             console.error("flyFlight error", error);
         }
     };
+    const getFlightType = (type) => {
+        switch (type) {
+            case 'J': return 'Passenger (Scheduled)';
+            case 'F': return 'Passenger (Additional)';
+            case 'C': return 'Passenger (Charter)';
+            case 'A': return 'Passenger (Special Charter)';
+            case 'E': return 'Cargo (Scheduled)';
+            case 'G': return 'Cargo (Additional)';
+            case 'H': return 'Cargo (Charter)';
+            case 'I': return 'Mail Service';
+            case 'K': return 'VIP Flight';
+            case 'M': return 'Ambulance';
+            case 'O': return 'Training';
+            case 'P': return 'Military';
+            case 'T': return 'Positioning';
+            case 'W': return 'Technical Test';
+            case 'X': return 'Technical Stop';
+        }
+    }
 
     const planWithSimBrief = async () => {
         if (!aircraft) {
-            return notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            return notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "No suitable aircraft for this flight",
                 type: "danger",
             });
@@ -237,13 +257,7 @@ const BidRow = (props) => {
                 </div>
 
                 <div className="col-span-3">
-                    {props.flight.type === "P" ? (
-                        <h3>Passenger Flight</h3>
-                    ) : props.flight.type === "C" ? (
-                        <h3>Cargo Flight</h3>
-                    ) : (
-                        <h3>Charter Flight</h3>
-                    )}
+                    {getFlightType(props.flight.type)}
                 </div>
                 <div className="col-span-5"></div>
                 <div className="text-right col-span-2">
@@ -370,7 +384,7 @@ const BidRow = (props) => {
                                                 {a.name}{" "}
                                                 {a.registration
                                                     ? ` (${a.registration})`
-                                                    : ""}
+                                                    : ""} {"| "}{a.state}
                                             </option>
                                         ))}
                                 </select>
@@ -551,7 +565,7 @@ const Bids = (props) => {
                         {props.pluginSettings?.charter_flights ? (
                             <Link className="inline-link" to="/create-flight/">
                                 <div className="button button-hollow ml-3">
-                                    <span>Create Flight</span>
+                                    <span>Create Free Flight</span>
                                 </div>
                             </Link>
                         ) : null}
@@ -617,7 +631,7 @@ const FlightCenter = ({ identity }) => {
     const [simBriefInstalled, setSimBriefInstalled] = useState(false);
 
     const pluginData = identity?.airline?.plugins?.find(
-        (p) => p.id === "com.cardinalhorizon.phpvms7-native-flight-center"
+        (p) => p.id === "com.cardinalhorizon.vms7-nfc"
     );
 
     useEffect(() => {

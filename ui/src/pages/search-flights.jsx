@@ -8,14 +8,32 @@ import { GetAirport, GetAircraft, DecDurToStr } from "../helper.js";
 import Autocomplete from "../components/autocomplete";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeft } from "@fortawesome/pro-solid-svg-icons";
-const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.phpvms7-native-flight-center/";
+const baseUrl = "http://localhost:7172/api/com.cardinalhorizon.vms7-nfc/";
 
 const FlightRow = (props) => {
     const [aircraft, setAircraft] = useState(null);
 
     const depApt = GetAirport(props.flight.departureAirport, props.airports);
     const arrApt = GetAirport(props.flight.arrivalAirport, props.airports);
-
+    const getFlightType = (type) => {
+        switch (type) {
+            case 'J': return 'Passenger (Scheduled)';
+            case 'F': return 'Passenger (Additional)';
+            case 'C': return 'Passenger (Charter)';
+            case 'A': return 'Passenger (Special Charter)';
+            case 'E': return 'Cargo (Scheduled)';
+            case 'G': return 'Cargo (Additional)';
+            case 'H': return 'Cargo (Charter)';
+            case 'I': return 'Mail Service';
+            case 'K': return 'VIP Flight';
+            case 'M': return 'Ambulance';
+            case 'O': return 'Training';
+            case 'P': return 'Military';
+            case 'T': return 'Positioning';
+            case 'W': return 'Technical Test';
+            case 'X': return 'Technical Stop';
+        }
+    }
     useEffect(() => {
         if (!Array.isArray(props.flight.aircraft)) {
             const res = GetAircraft(props.flight.aircraft, props.aircraft);
@@ -59,7 +77,7 @@ const FlightRow = (props) => {
                                 <span>{props.flight.subfleets.join(", ")}</span>
                             ) : (
                                 <span>
-                                    <i>No Aircraft available</i>
+                                    <i>Any Aircraft</i>
                                 </span>
                             )}
                         </div>
@@ -78,13 +96,7 @@ const FlightRow = (props) => {
                 </div>
 
                 <div className="col-span-3">
-                    {props.flight.type === "P" ? (
-                        <h3>Passenger Flight</h3>
-                    ) : props.flight.type === "C" ? (
-                        <h3>Cargo Flight</h3>
-                    ) : (
-                        <h3>Charter Flight</h3>
-                    )}
+                    {getFlightType(props.flight.type)}
                 </div>
                 <div className="col-span-5"></div>
                 <div className="text-right col-span-2">
@@ -258,13 +270,13 @@ const SearchFlightsContent = (props) => {
                 setFlights(response);
             } else {
                 setFlights([]);
-                notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+                notify("com.cardinalhorizon.vms7-nfc", null, null, {
                     message: "Error parsing flights",
                     type: "danger",
                 });
             }
         } catch (error) {
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "Failed to fetch flights",
                 type: "danger",
             });
@@ -281,13 +293,13 @@ const SearchFlightsContent = (props) => {
                 },
             });
 
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "Flight booked successfully",
                 type: "success",
             });
             navigate("/");
         } catch (error) {
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "Failed to book flight",
                 type: "danger",
             });
@@ -428,17 +440,11 @@ const SearchFlightsContent = (props) => {
                                 setAircraft(e.target.value);
                             }}
                         >
-                            <option value="">Any Aircraft</option>
-                            {props.aircraft.map((aircraft) => {
+                            <option value="">Any Subfleet</option>
+                            {props.subfleets.map((aircraft) => {
                                 return (
-                                    <option
-                                        key={aircraft.id}
-                                        value={aircraft.id}
-                                    >
-                                        {aircraft.name}
-                                        {!!aircraft.registration
-                                            ? " (" + aircraft.registration + ")"
-                                            : null}
+                                    <option key={aircraft.id} value={aircraft.id}>
+                                        {`[${aircraft.airline.icao}] ${aircraft.name}`}
                                     </option>
                                 );
                             })}
@@ -663,7 +669,7 @@ const SearchFlightsContent = (props) => {
 const SearchFlights = () => {
     const [airports, setAirports] = useState([]);
     const [aircraft, setAircraft] = useState([]);
-
+    const [subfleets, setSubfleets] = useState([]);
     const getAirports = async () => {
         try {
             const response = await request({
@@ -672,7 +678,7 @@ const SearchFlights = () => {
             });
             setAirports(response);
         } catch (error) {
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "Failed to fetch airports",
                 type: "danger",
             });
@@ -690,19 +696,36 @@ const SearchFlights = () => {
 
             setAircraft(response);
         } catch (error) {
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "Failed to fetch aircraft",
                 type: "danger",
             });
         }
     };
+    const getSubfleets = async () => {
+        try {
+            const response = await request({
+                url: `${baseUrl}subfleets`,
+                method: "GET",
+            });
 
+            response.sort((a, b) => a.name.localeCompare(b.name));
+
+            setSubfleets(response);
+        } catch (error) {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
+                message: "Failed to fetch aircraft",
+                type: "danger",
+            });
+        }
+    };
     useEffect(() => {
         getAirports();
         getAircraft();
+        getSubfleets();
     }, []);
 
-    return <SearchFlightsContent airports={airports} aircraft={aircraft} />;
+    return <SearchFlightsContent airports={airports} aircraft={aircraft} subfleets={subfleets}/>;
 };
 
 export default SearchFlights;

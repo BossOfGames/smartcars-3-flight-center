@@ -1,9 +1,10 @@
 {
-    "id": "com.cardinalhorizon.phpvms7-native-flight-center",
+    "id": "com.cardinalhorizon.vms7-nfc",
     "name": "Flight Center",
-    "version": "0.10.0",
+    "organization": "Cardinal Horizon",
+    "version": "0.10.3",
     "type": "airline",
-    "description": "Flight Booking System for use with smartCARS Native for phpVMS 7",
+    "description": "Flight Management System for use with \"Native\" for phpVMS 7",
     "availableSettings": {
         "charter_flights": {
             "name": "Allow Flight Chartering",

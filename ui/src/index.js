@@ -12,7 +12,7 @@ const root = createRoot(container);
 
 root.render(
     <React.StrictMode>
-        <BrowserRouter basename="/plugins/com.cardinalhorizon.phpvms7-native-flight-center">
+        <BrowserRouter basename="/plugins/com.cardinalhorizon.vms7-nfc">
             <App />
         </BrowserRouter>
     </React.StrictMode>

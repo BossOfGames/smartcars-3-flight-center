@@ -6,6 +6,7 @@ let cache = {
     flights: {},
     airports: {},
     aircrafts: {},
+    subfleets: {},
     bookings: {},
 };
 
@@ -58,7 +59,7 @@ const getAircrafts = async () => {
     }
 
     const response = await axios({
-        url: `${scIdentity.airline.settings.scriptURL}data/aircraft`,
+        url: `${scIdentity.airline.settings.scriptURL}data/aircraft?state=parked`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${scIdentity.va_user.session}`,

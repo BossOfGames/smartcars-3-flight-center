@@ -52,5 +52,5 @@
         "postcss": "^8.4.12",
         "tailwindcss": "^3.0.23"
     },
-    "homepage": "/plugins/com.cardinalhorizon.phpvms7-native-flight-center/"
+    "homepage": "/plugins/com.cardinalhorizon.vms7-nfc/"
 }

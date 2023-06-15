@@ -37,7 +37,7 @@ function MainApp() {
 
             setIdentity(response);
         } catch (error) {
-            notify("com.cardinalhorizon.phpvms7-native-flight-center", null, null, {
+            notify("com.cardinalhorizon.vms7-nfc", null, null, {
                 message: "Failed to fetch identity.",
                 type: "warning",
             });
@@ -48,7 +48,7 @@ function MainApp() {
     if (isLoading) return <Loading />;
 
     const pluginData = identity?.airline?.plugins?.find(
-        (p) => p.id === "com.cardinalhorizon.phpvms7-native-flight-center"
+        (p) => p.id === "com.cardinalhorizon.vms7-nfc"
     );
     const charterFlights =
         pluginData?.appliedSettings?.charter_flights === true;
