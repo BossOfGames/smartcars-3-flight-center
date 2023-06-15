@@ -37,7 +37,7 @@ const BidRow = (props) => {
                 type: "danger",
             });
         }
-        const flight = {
+        let flight = {
             number: props.flight.code + props.flight.number,
             departure: depApt,
             arrival: arrApt,
@@ -49,7 +49,7 @@ const BidRow = (props) => {
             cruise: props.flight.flightLevel,
             route: [...route.split(" ")],
             distance: props.flight.distance,
-            bidId: props.flight.bidID,
+            bidId: null,
             weightUnits: props.weightUnits,
             altitudeUnits: props.altitudeUnits,
             landingDistanceUnits: props.landingDistanceUnits,
@@ -68,6 +68,7 @@ const BidRow = (props) => {
             });
 
             foundBid = props.flight.flightID === pirep.flight_id;
+            flight.bidId = pirep.id;
             console.log([props.flight, pirep.flight_id]);
         } catch (error) {
             notify("com.cardinalhorizon.vms7-nfc", null, null, {
